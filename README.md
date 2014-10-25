@@ -58,3 +58,9 @@ Done, without errors.
 ### Referencing release names within other tasks
 
 Once run, the generated release names can be referenced within other tasks under the `global.release_name` property.
+
+## FAQ
+
+##### Are the same release names ever generated?
+
+No. The plugin maintains a list of generated release names in the `.grunt/grunt-release-name-generator` directory. Once a release name is generated, it will not be re-used.
