@@ -21,6 +21,8 @@ grunt.loadNpmTasks('grunt-release-name-generator');
 
 Specify one or more Grunt targets within your Grunt config object. Global options are set under the `options` key and can be overriden on the target level.
 
+By default, all available name categories (mammals, lizards, birds, fish, reptiles) are used, but you can specify a category, as shown below.
+
 ```
 grunt.config('release-name-generator', {
     'options': {
