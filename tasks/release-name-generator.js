@@ -3,8 +3,11 @@
 var _ = require('lodash');
 _.mixin(require('underscore.string'));
 var util = require('util');
+var path = require('path');
 
 module.exports = function(grunt) {
+
+    var previousNamesSource = path.resolve('.grunt/grunt-release-name-generator/previous-names.json');
 
     var adjectives = require(__dirname + '/../lib/adjectives.json');
 
@@ -28,7 +31,29 @@ module.exports = function(grunt) {
         animals[key] = format(data);
     });
 
-    var generateName = function(category) {
+    var initDataDir = function() {
+        var srcFolder = path.resolve('.grunt/grunt-release-name-generator');
+        if (grunt.file.exists(srcFolder)) {
+            return;
+        }
+        grunt.file.mkdir(srcFolder);
+        grunt.file.write(srcFolder + '/previous-names.json', '[]');
+    };
+
+    var getPreviousNames = function() {
+        var previousNames = grunt.file.readJSON(previousNamesSource);
+        console.log('bbb', previousNames);
+        return previousNames;
+    };
+
+    var updatePreviousNames = function(name) {
+        var names = getPreviousNames();
+        names.push(name);
+        grunt.file.write(previousNamesSource, JSON.stringify(names));
+    };
+
+    var generateName = function(category, previousNames) {
+        initDataDir();
         adjectives = _.shuffle(adjectives);
         var adjective = adjectives[0];
         var filteredAnimals = _.filter(animals[category], function(animal) {
@@ -37,10 +62,15 @@ module.exports = function(grunt) {
             }
         });
         if (!filteredAnimals.length) {
-            return generateName(category);
+            return generateName(category, previousNames);
         }
         filteredAnimals = _.shuffle(filteredAnimals);
-        return adjective + ' ' + filteredAnimals[0];
+        var name = adjective + ' ' + filteredAnimals[0];
+        if (previousNames.indexOf(name) >= 0) {
+            return generateName(category, previousNames);
+        }
+        updatePreviousNames(name);
+        return name;
     };
 
     grunt.registerMultiTask('release-name-generator', function() {
@@ -56,7 +86,9 @@ module.exports = function(grunt) {
 
         grunt.log.subhead('Generating release name for: ' + this.target);
 
-        var name = generateName(options.category);
+        var previousNames = getPreviousNames();
+
+        var name = generateName(options.category, previousNames);
 
         grunt.log.oklns('Release name: ' + name);
 
