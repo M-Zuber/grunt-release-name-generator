@@ -1,6 +1,6 @@
 {
   "name": "grunt-release-name-generator",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Grunt plugin that generates unique release names, Ubuntu-style (e.g. Distant Dragon, Wobbly Wren, etc...)",
   "dependencies": {
     "lodash": "^2.4.1",

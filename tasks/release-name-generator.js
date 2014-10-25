@@ -42,7 +42,6 @@ module.exports = function(grunt) {
 
     var getPreviousNames = function() {
         var previousNames = grunt.file.readJSON(previousNamesSource);
-        console.log('bbb', previousNames);
         return previousNames;
     };
 
