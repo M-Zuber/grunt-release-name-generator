@@ -1,8 +1,6 @@
 'use strict';
 
 var _ = require('lodash');
-var util = require('util');
-var path = require('path');
 
 module.exports = function(grunt) {
 
